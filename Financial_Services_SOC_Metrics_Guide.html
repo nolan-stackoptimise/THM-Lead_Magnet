@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Guide to SOC Metrics — Financial Services | TryHackMe</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--card:#1c2333;--card2:#222d3f;--elev:#243047;--g:#88cc14;--gl:#a3e635;--gd:#65a30d;--gg:rgba(136,204,20,.15);--gs:rgba(136,204,20,.08);--bl:#3b82f6;--or:#f59e0b;--rd:#ef4444;--t1:#e6edf3;--t2:#8b949e;--t3:#6e7681;--bd:#30363d;--bd2:#21262d;--r:10px;--tr:.3s cubic-bezier(.4,0,.2,1)}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}.container{max-width:860px;margin:0 auto;padding:0 24px}.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;padding:80px 0}.hero::before{content:'';position:absolute;top:-50%;right:-30%;width:800px;height:800px;background:radial-gradient(circle,var(--gg) 0%,transparent 70%);pointer-events:none;animation:pg 8s ease-in-out infinite}@keyframes pg{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}.hero-brand{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:var(--g);letter-spacing:2px;text-transform:uppercase;margin-bottom:48px;position:relative;z-index:1}.hero-pre{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,42px);font-weight:400;color:var(--t2);line-height:1.2;position:relative;z-index:1}.hero-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(48px,7vw,80px);font-weight:700;color:var(--g);line-height:1.05;margin-bottom:8px;position:relative;z-index:1}.hero-bar{width:120px;height:4px;background:linear-gradient(90deg,var(--g),var(--gl));border-radius:2px;margin:24px 0;position:relative;z-index:1}.hero-sub{font-size:20px;color:var(--t1);font-weight:500;margin-bottom:8px;position:relative;z-index:1}.hero-tag{font-size:15px;color:var(--t2);position:relative;z-index:1;margin-bottom:56px}.hero-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;position:relative;z-index:1}.hf{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:20px 16px;text-align:center;transition:var(--tr)}.hf:hover{border-color:var(--g);background:var(--card2);transform:translateY(-2px)}.hf b{display:block;font-size:13px;color:var(--g);margin-bottom:4px}.hf span{font-size:12px;color:var(--t3)}.toc{position:sticky;top:0;background:rgba(13,17,23,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd2);z-index:100;padding:12px 0}.toc-in{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 24px;max-width:860px;margin:0 auto}.toc-in::-webkit-scrollbar{display:none}.toc-in a{font-size:12px;font-weight:500;color:var(--t3);text-decoration:none;white-space:nowrap;padding:6px 12px;border-radius:20px;transition:var(--tr);border:1px solid transparent}.toc-in a:hover{color:var(--g);background:var(--gs);border-color:var(--g)}section{padding:80px 0 40px}.sn{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--g);font-weight:500;letter-spacing:1px;margin-bottom:8px;display:block}.st{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,4vw,38px);font-weight:700;color:var(--t1);line-height:1.15;margin-bottom:12px}.sb{width:64px;height:3px;background:var(--g);border-radius:2px}.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bd),transparent);margin:60px 0}p.b{color:var(--t2);margin-bottom:20px;font-size:15.5px;line-height:1.75}p.b strong,p.b b{color:var(--t1);font-weight:600}h3.ss{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:var(--g);margin:36px 0 12px}h4.ss2{font-size:15px;font-weight:600;color:var(--t1);margin:20px 0 8px}ul.ml{list-style:none;margin:16px 0 24px}ul.ml>li{position:relative;padding-left:20px;margin-bottom:16px;color:var(--t2);font-size:15px;line-height:1.7}ul.ml>li::before{content:'';position:absolute;left:0;top:10px;width:8px;height:8px;background:var(--g);border-radius:2px;transform:rotate(45deg)}ul.ml>li strong{color:var(--t1)}.co{border-radius:var(--r);padding:20px 24px;margin:24px 0;border-left:4px solid}.co-n{background:var(--gs);border-color:var(--g)}.co-t{background:rgba(59,130,246,.08);border-color:var(--bl)}.co-i{background:rgba(245,158,11,.08);border-color:var(--or)}.co-l{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}.co-n .co-l{color:var(--g)}.co-t .co-l{color:var(--bl)}.co-i .co-l{color:var(--or)}.co p{color:var(--t2);font-size:14px;line-height:1.65;margin:0}.dt{width:100%;border-collapse:collapse;margin:20px 0 28px;font-size:14px;border-radius:var(--r);overflow:hidden}.dt thead{background:var(--elev)}.dt th{padding:12px 16px;text-align:left;font-weight:600;color:var(--t1);font-size:13px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--g)}.dt td{padding:12px 16px;border-bottom:1px solid var(--bd2);color:var(--t2)}.dt tbody tr{transition:var(--tr)}.dt tbody tr:hover{background:var(--card)}.dt tbody tr:nth-child(even){background:var(--bg2)}.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.sc{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:24px 16px;text-align:center;transition:var(--tr)}.sc:hover{border-color:var(--g);transform:translateY(-2px);box-shadow:0 2px 8px rgba(0,0,0,.3)}.sc-n{font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:700;color:var(--g);line-height:1.1}.sc-c{font-size:12px;color:var(--t3);margin:4px 0}.sc-l{font-size:12px;color:var(--t2);font-weight:500}.bc{margin:20px 0 12px}.bi{display:grid;grid-template-columns:160px 1fr 50px;align-items:center;gap:12px;margin-bottom:10px}.bi-l{font-size:13px;color:var(--t2);font-weight:500;text-align:right}.bi-t{height:24px;background:var(--card);border-radius:4px;overflow:hidden}.bi-f{height:100%;border-radius:4px;transition:width 1.5s cubic-bezier(.4,0,.2,1)}.bi-f.gr{background:linear-gradient(90deg,var(--gd),var(--g))}.bi-f.bl{background:linear-gradient(90deg,#2563eb,var(--bl))}.bi-f.or{background:linear-gradient(90deg,#d97706,var(--or))}.bi-v{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--t1)}.bv{display:flex;gap:0;margin:24px 0;border-radius:var(--r);overflow:hidden;height:80px}.bs{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;flex:1}.bs:nth-child(1){background:var(--elev)}.bs:nth-child(2){background:rgba(136,204,20,.15)}.bs:nth-child(3){background:rgba(136,204,20,.3)}.bs-n{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700}.bs:nth-child(1) .bs-n{color:var(--t3)}.bs:nth-child(2) .bs-n{color:var(--g)}.bs:nth-child(3) .bs-n{color:var(--gl)}.bs-l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}.step{display:flex;gap:20px;margin:28px 0 16px;align-items:flex-start}.step-c{flex-shrink:0;width:40px;height:40px;background:var(--g);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--bg)}.step-t{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;color:var(--t1);padding-top:6px}.pit{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:24px;margin:16px 0;transition:var(--tr)}.pit:hover{border-color:var(--or)}.pit-t{font-weight:700;font-size:15px;color:var(--or);margin-bottom:8px}.pit-t::before{content:'⚠ '}.pit-b{font-size:14px;color:var(--t2);line-height:1.65}.pit-b strong{color:var(--t1)}.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:32px 0}.rc{background:linear-gradient(135deg,var(--card),var(--elev));border:1px solid var(--bd);border-radius:16px;padding:32px 20px;text-align:center}.rc-n{font-family:'Space Grotesk',sans-serif;font-size:42px;font-weight:700;color:var(--g);line-height:1}.rc-l{font-size:13px;color:var(--t3);margin-top:8px;line-height:1.4}.cta{background:linear-gradient(135deg,var(--card) 0%,var(--elev) 100%);border:2px solid var(--g);border-radius:16px;padding:48px 40px;text-align:center;margin:48px 0;position:relative;overflow:hidden}.cta::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 50%,var(--gg) 0%,transparent 50%);pointer-events:none}.cta h3{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--t1);margin-bottom:12px;position:relative}.cta p{color:var(--t2);font-size:15px;max-width:500px;margin:0 auto 24px;position:relative}.cta a{display:inline-block;background:var(--g);color:var(--bg);font-weight:700;font-size:15px;padding:14px 36px;border-radius:8px;text-decoration:none;transition:var(--tr);position:relative}.cta a:hover{background:var(--gl);transform:translateY(-2px);box-shadow:0 4px 20px rgba(136,204,20,.3)}.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}.fc{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px}.fc-n{font-weight:700;font-size:13px;color:var(--g);margin-bottom:6px}.fc-d{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--t2);line-height:1.5}.qt{border-left:4px solid var(--g);padding:16px 24px;margin:24px 0;background:var(--gs);border-radius:0 var(--r) var(--r) 0}.qt p{font-size:16px;font-style:italic;color:var(--t1);line-height:1.65;margin:0 0 8px}.qt cite{font-size:13px;color:var(--t3);font-style:normal}.disc{font-size:12px;font-style:italic;color:var(--t3);margin:8px 0 16px}@media(max-width:768px){.sg{grid-template-columns:repeat(2,1fr)}.fg,.rg{grid-template-columns:1fr}.bi{grid-template-columns:100px 1fr 45px}.hero-grid{grid-template-columns:repeat(2,1fr)}.bv{flex-direction:column;height:auto}}@media(max-width:480px){.sg,.hero-grid{grid-template-columns:1fr}}@media print{body{background:#fff;color:#1a1a2e}.toc{display:none}section{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<section class="hero"><div class="container">
+  <div class="hero-brand">TryHackMe</div>
+  <div class="hero-pre">A Guide to</div>
+  <div class="hero-title">SOC Metrics</div>
+  <div class="hero-bar"></div>
+  <div class="hero-sub">For Financial Services</div>
+  <div class="hero-tag">Measure – Defend – Prove Readiness to the Board</div>
+  <div class="hero-grid">
+    <div class="hf"><b>Core Banking Protection</b><span>Transaction & platform security</span></div>
+    <div class="hf"><b>Regulatory Compliance</b><span>PCI-DSS, SOX, GLBA, FFIEC</span></div>
+    <div class="hf"><b>Audit-Ready Reporting</b><span>Board & steering committee data</span></div>
+    <div class="hf"><b>Fraud & Threat Defence</b><span>SWIFT, payments, account data</span></div>
+  </div>
+</div></section>
+<nav class="toc"><div class="toc-in">
+  <a href="#s1">Executive Summary</a><a href="#s2">Why Metrics</a><a href="#s3">Categories</a><a href="#s4">Coverage</a><a href="#s5">Benchmark</a><a href="#s6">Use Case</a><a href="#s7">Dashboards</a><a href="#s8">Pitfalls</a><a href="#s9">Roadmap</a><a href="#s10">Formulas</a><a href="#s11">TryHackMe</a>
+</div></nav>
+<main class="container">
+<section id="s1"><div><span class="sn">01</span><h2 class="st">Executive Summary</h2><div class="sb"></div></div>
+<p class="b">For a financial services SOC, managing alerts from core banking platforms, trading systems, and payment networks is table stakes. What separates a competent operation from a <strong>defensible</strong> one is the ability to <strong>measure performance</strong>, <strong>prove readiness under audit</strong>, and <strong>translate results into language the board and steering committee can act on</strong>.</p>
+<p class="b">This guide is aimed at CISOs, SOC managers, and security leaders in banking, insurance, asset management, and payments organisations seeking to build a metrics-driven practice aligned with financial services threats and regulatory requirements including <strong>PCI-DSS</strong>, <strong>SOX</strong>, <strong>GLBA</strong>, <strong>FFIEC guidance</strong>, and <strong>DORA</strong>.</p>
+<p class="b">Consider this scenario: your team completes a tabletop exercise simulating a SWIFT payment fraud attack, deploys new detection rules for credential theft targeting customer portals, and updates incident response playbooks for ransomware targeting trading platforms. Weeks later, the steering committee asks: <em>how do we know we're actually better?</em> Without reliable metrics, that question goes unanswered. With the right metrics, you have data, insight, and evidence that survives audit scrutiny.</p>
+<h4 class="ss2">In this guide you will learn:</h4>
+<ul class="ml">
+  <li>Why SOC metrics matter in financial services and how they tie to regulatory obligations and risk appetite.</li>
+  <li>A framework for grouping metrics into meaningful categories aligned with maturity levels.</li>
+  <li>Key metrics defined, explained, and contextualised for financial services applicability.</li>
+  <li>How to select, benchmark, and report metrics so they drive performance and satisfy auditors.</li>
+  <li>Best practices for dashboarding, stakeholder reporting, and avoiding common pitfalls.</li>
+  <li>A practical roadmap to build or refine your financial services SOC metrics programme.</li>
+</ul>
+<p class="b">Throughout this guide you will see references to scenario-based training, real-world adversary emulation, and continuous upskilling—areas where <strong>TryHackMe</strong> helps financial services organisations embed operational readiness into their SOC fabric.</p>
+</section><div class="divider"></div>
+<section id="s2"><div><span class="sn">02</span><h2 class="st">Why SOC Metrics Matter in Financial Services</h2><div class="sb"></div></div>
+<p class="b">Too many financial services SOCs operate without a clear metrics foundation. The cost is hidden: longer detection times for threats targeting payment systems, inconsistent responses to fraud alerts, uneven workload distribution during market-hours surges, and unclear value communication when the board asks hard questions. Metrics change that.</p>
+<h4 class="ss2">First, metrics provide visibility</h4>
+<p class="b">into what the SOC is actually doing. When you measure Mean Time to Detect (MTTD) for threats against core banking systems or False Positive Rate (FPR) for transaction monitoring alerts, you move from anecdote to data. In regulated environments, anecdote is not defensible.</p>
+<h4 class="ss2">Second, metrics enable improvement.</h4>
+<p class="b">If your MTTR for payment fraud incidents shows a persistent trend above target, you have a concrete lever. You examine playbooks for PCI-DSS related incidents, evaluate staffing during trading hours, or assess automation gaps in your SOAR platform. Without the metric, the problem stays invisible until the next audit finding.</p>
+<h4 class="ss2">Third, metrics validate the SOC's value to financial services stakeholders.</h4>
+<p class="b">When the board asks, "What is our SOC doing for the institution?", metrics allow a credible response: <strong>"We reduced detection time for payment threats by 29%, cut analyst dwell time by 57%, and prevented an estimated $3.2M in potential fraud losses this quarter."</strong> That language survives a steering committee. Vague reassurances do not.</p>
+<h4 class="ss2">Finally, metrics future-proof your SOC.</h4>
+<p class="b">As financial threats evolve with real-time payments, open banking APIs, and AI-powered fraud, so too must your ability to measure their impact. Regulators are increasingly asking for quantified evidence of readiness. DORA (Digital Operational Resilience Act) explicitly requires financial entities to test, measure, and report on their ICT resilience. Without metrics, you are defending a position you cannot prove.</p>
+<div class="qt"><p>"Anytime you have numbers and you can prove that to management, they are more willing to invest."</p><cite>— SOC Manager, Financial Services (from industry research)</cite></div>
+</section><div class="divider"></div>
+<section id="s3"><div><span class="sn">03</span><h2 class="st">Metric Categories & Key Metrics</h2><div class="sb"></div></div>
+<p class="b">A widely accepted framework organises metrics into four categories. In financial services, the weighting shifts toward business and value metrics because audit, compliance, and risk reduction are primary buying signals—not just operational efficiency.</p>
+<table class="dt"><thead><tr><th>Category</th><th>Focus</th><th>Weight</th></tr></thead><tbody>
+<tr><td><strong>Detection & Discovery</strong></td><td>See threats early and accurately</td><td>25%</td></tr>
+<tr><td><strong>Response & Remediation</strong></td><td>Act effectively once detected</td><td>25%</td></tr>
+<tr><td><strong>Operational Efficiency</strong></td><td>Run the SOC engine well</td><td>20%</td></tr>
+<tr><td><strong>Business / Value Metrics</strong></td><td>Link to business outcomes and audit</td><td>30%</td></tr>
+</tbody></table>
+<div class="co co-n"><div class="co-l">Financial Services Insight</div><p>Notice the higher weighting on Business / Value Metrics. In financial services, the ability to prove outcomes to auditors, regulators, and the board is often more strategically important than raw operational speed. A SOC that is fast but cannot demonstrate its value to a steering committee is operating at risk.</p></div>
+<h3 class="ss">Detection & Discovery</h3>
+<ul class="ml">
+  <li><strong>Mean Time to Detect (MTTD):</strong> The average time between when a threat actor begins meaningful activity against financial systems and when your SOC identifies it. A shorter MTTD means less dwell time for attackers in core banking databases, trading platforms, or customer account systems.</li>
+  <li><strong>Detection Coverage:</strong> The percentage of your financial threat-vector universe covered by detection controls and tested regularly via adversary simulation. For financial services, this must include SWIFT messaging fraud, card-not-present fraud patterns, insider trading indicators, and API abuse on open banking endpoints.</li>
+  <li><strong>False Positive Rate (FPR) / False Negative Rate (FNR):</strong> FPR shows how many benign events are incorrectly flagged—critical in transaction monitoring where false positives create real operational drag and customer friction. FNR shows how many real threats are missed—unacceptable when regulators review incident histories.</li>
+</ul>
+<div class="co co-t"><div class="co-l">Tip</div><p>Detection coverage for financial services should be mapped against both MITRE ATT&CK and FS-ISAC threat intelligence, with particular attention to credential theft targeting customer portals, lateral movement through interconnected banking systems, and fraud patterns specific to your product lines (payments, lending, trading, insurance claims).</p></div>
+<h3 class="ss">Response & Remediation</h3>
+<ul class="ml">
+  <li><strong>Mean Time to Respond / Restore (MTTR):</strong> The average time from detection to containment. For financial institutions, fast response to threats affecting payment processing, trading platforms, or customer account access can mean the difference between a contained incident and a regulatory notification obligation.</li>
+  <li><strong>Incident Escalation Rate:</strong> The proportion of incidents escalated to senior analysts or external IR providers. High escalation may indicate gaps in Tier 1 analyst training on financial-specific attack patterns, or insufficient playbook coverage for transaction fraud scenarios.</li>
+  <li><strong>Dwell Time:</strong> The total time a threat actor remains in financial systems undetected and uncontrolled. For institutions subject to breach notification requirements, dwell time directly impacts regulatory exposure and customer trust.</li>
+</ul>
+<h3 class="ss">Operational Efficiency</h3>
+<ul class="ml">
+  <li><strong>Analyst Throughput:</strong> Incidents and alerts handled per analyst per timeframe. Helps assess productivity during market-hours surges, quarter-end reporting windows, and staffing requirements across global trading desks.</li>
+  <li><strong>Automation Rate:</strong> Percentage of alerts handled automatically via playbooks or SOAR tools. Higher automation frees analysts for sophisticated threats—particularly important in financial services where transaction monitoring generates extremely high alert volumes.</li>
+  <li><strong>Cost per Incident:</strong> Total SOC cost divided by incidents managed. In financial services, this metric is critical for justifying headcount and tooling investments to finance teams who demand quantified returns.</li>
+</ul>
+<h3 class="ss">Business / Value Metrics</h3>
+<ul class="ml">
+  <li><strong>Risk-Reduction Rate:</strong> The measurable decline in business risk—fewer intrusions, reduced regulatory findings, lower cyber insurance premiums. Financial services cyber insurance premiums have increased 30–50% in recent years; demonstrating risk reduction directly supports renewal negotiations and board confidence.</li>
+  <li><strong>Ramp-Up Time:</strong> Time for a new analyst to reach full operational competency on financial-specific systems. With talent shortages in financial services cybersecurity, this metric directly impacts operational continuity and recruitment ROI.</li>
+  <li><strong>Audit Readiness Score:</strong> A composite measure of how prepared the SOC is for regulatory examinations. This includes documentation completeness, exercise frequency, reporting cadence, and evidence of continuous improvement. Unique to regulated industries and critical for financial services SOCs.</li>
+</ul>
+<div class="qt"><p>"These exercises are scored. Results are escalated to a steering committee."</p><cite>— SVP Director of IT, Regional Bank (from industry research)</cite></div>
+</section><div class="divider"></div>
+<section id="s4"><div><span class="sn">04</span><h2 class="st">Detection Coverage Analysis</h2><div class="sb"></div></div>
+<p class="b">Detection coverage shows the percentage of your financial threat-vector universe covered by detection controls. For financial services, this includes core banking platforms, trading systems, payment networks, customer portals, ATM infrastructure, and increasingly, open banking APIs.</p>
+<h4 class="ss2">Illustrative Financial Services Threat Coverage by Attack Vector</h4>
+<div class="bc">
+  <div class="bi"><div class="bi-l">Payment Systems</div><div class="bi-t"><div class="bi-f gr" style="width:74%"></div></div><div class="bi-v">74%</div></div>
+  <div class="bi"><div class="bi-l">Customer Portals</div><div class="bi-t"><div class="bi-f gr" style="width:68%"></div></div><div class="bi-v">68%</div></div>
+  <div class="bi"><div class="bi-l">Core Banking</div><div class="bi-t"><div class="bi-f gr" style="width:65%"></div></div><div class="bi-v">65%</div></div>
+  <div class="bi"><div class="bi-l">Trading Platforms</div><div class="bi-t"><div class="bi-f bl" style="width:58%"></div></div><div class="bi-v">58%</div></div>
+  <div class="bi"><div class="bi-l">ATM / Branch Infra</div><div class="bi-t"><div class="bi-f bl" style="width:48%"></div></div><div class="bi-v">48%</div></div>
+  <div class="bi"><div class="bi-l">Open Banking APIs</div><div class="bi-t"><div class="bi-f or" style="width:35%"></div></div><div class="bi-v">35%</div></div>
+</div>
+<p class="disc">These figures are illustrative examples showing typical coverage distribution. Actual coverage varies by institution size, maturity, and product mix. Use your own baseline measurement as your starting point.</p>
+<h4 class="ss2">Target Detection Coverage Benchmarks</h4>
+<div class="bv"><div class="bs"><div class="bs-n">30%</div><div class="bs-l">Typical Baseline</div></div><div class="bs"><div class="bs-n">55%</div><div class="bs-l">Healthy Target</div></div><div class="bs"><div class="bs-n">75%</div><div class="bs-l">Mature SOC</div></div></div>
+<div class="co co-n"><div class="co-l">Key Insight</div><p>For financial services, detection coverage should be mapped against both MITRE ATT&CK and FS-ISAC threat intelligence, with special attention to SWIFT messaging fraud, card-not-present fraud patterns, insider trading indicators, and API abuse on open banking endpoints. Coverage gaps in open banking APIs are increasingly exploited and represent the fastest-growing attack surface in the sector.</p></div>
+</section><div class="divider"></div>
+<section id="s5"><div><span class="sn">05</span><h2 class="st">How to Select, Align and Benchmark Metrics</h2><div class="sb"></div></div>
+<p class="b">Choosing the right metrics is not simply picking from a list—it's about selecting metrics that align with your institution's risk appetite, regulatory obligations, maturity level, and resource constraints. In financial services, metrics that cannot survive audit scrutiny are metrics that do not matter.</p>
+<div class="step"><div class="step-c">1</div><div class="step-t">Define your SOC objective</div></div>
+<p class="b">What is your SOC trying to achieve in the next 12–24 months? Examples: reduce detection time for payment fraud by 30%, achieve FFIEC examination readiness, automate 50% of routine transaction monitoring alerts, comply with DORA resilience testing requirements.</p>
+<div class="co co-t"><div class="co-l">Tip</div><p>The best objectives in financial services align directly with regulatory outcomes and risk appetite. Rather than "automate 40% of alerts," try "ensure 100% of PCI-DSS scope alerts are triaged within 15 minutes and evidence is retained for audit."</p></div>
+<div class="step"><div class="step-c">2</div><div class="step-t">Align metrics to objectives</div></div>
+<p class="b">If your objective is to reduce detection time for fraud, then MTTD, detection coverage for payment systems, and FNR are relevant. If preparing for a regulatory examination, audit readiness score, exercise frequency, and reporting completeness matter.</p>
+<div class="step"><div class="step-c">3</div><div class="step-t">Set realistic targets</div></div>
+<p class="b">Benchmarks vary by institution size, product complexity, and maturity. A global investment bank and a regional credit union have different threat profiles and resource levels. Use internal baselines and aim for realistic, incremental improvements—not aspirational targets that erode credibility with regulators.</p>
+<div class="step"><div class="step-c">4</div><div class="step-t">Ensure data integrity</div></div>
+<p class="b">Ensure timestamps from core banking alerts, transaction monitoring systems, SIEM logs, triage records, and incident management platforms are captured consistently. In financial services, incomplete or inconsistent data is an audit finding in itself.</p>
+<div class="step"><div class="step-c">5</div><div class="step-t">Layer reporting for each audience</div></div>
+<p class="b">Tactical reports for analysts, operational reports for SOC managers, and strategic summaries for the CISO and board—each with different levels of detail and different language. The board needs risk reduction narratives. The steering committee needs exercise scores and trend lines. Analysts need queue data and personal development metrics.</p>
+<div class="step"><div class="step-c">6</div><div class="step-t">Benchmark and track trends</div></div>
+<p class="b">Use external sources (FS-ISAC, SWIFT intelligence, FFIEC guidance) to benchmark, but focus on your own trend lines. Improvement over time within your institution is more meaningful to examiners than generic industry benchmarks.</p>
+<div class="co co-n"><div class="co-l">Note</div><p>The goal isn't to "hit good numbers and forget," but to continuously re-evaluate whether performance remains sufficient given evolving threats and regulatory expectations from PCI-DSS, SOX, GLBA, FFIEC, and DORA.</p></div>
+</section><div class="divider"></div>
+<section id="s6"><div><span class="sn">06</span><h2 class="st">From Metric to Insight</h2><div class="sb"></div></div>
+<h3 class="ss">Financial Services SOC Use Case</h3>
+<p class="b">Consider a mid-tier financial services organisation with an internal SOC monitoring core banking platforms, payment processing systems, customer portals, and branch infrastructure across multiple regions. The SOC's objective: reduce attacker dwell time by 40%, improve incident response efficiency, and produce audit-ready evidence for quarterly steering committee reviews.</p>
+<p class="disc">This case study is a composite illustration informed by common financial services SOC patterns and publicly available industry data, not a specific organisation.</p>
+<div class="step"><div class="step-c">1</div><div class="step-t">Baseline phase</div></div>
+<p class="b">The SOC measured current MTTD (18 hours for payment system threats), MTTR (12 hours), FPR (22%) and automation rate (12%). These baselines covered incidents across transaction monitoring, customer portal credential theft, and ATM skimming alerts. Quarterly tabletop exercises were conducted but scored only on participation, not on measurable outcomes.</p>
+<div class="step"><div class="step-c">2</div><div class="step-t">Training and simulation</div></div>
+<p class="b">The SOC introduced scenario-based training through hands-on adversary emulation labs tailored to financial services attack patterns including SWIFT payment fraud, lateral movement through interconnected banking systems, ransomware targeting trading platforms, and credential theft against customer portals.</p>
+<ul class="ml">
+  <li>Simulated incident response playbooks gave analysts <strong>muscle memory</strong> for handling financial-specific incidents—practised under pressure, not studied from documentation.</li>
+  <li>Scenarios mirrored real-world breaches including SWIFT-based attacks, Capital One-style cloud misconfigurations, and Equifax-class data exposure events.</li>
+  <li>Key metrics impacted: MTTD improved as analysts tuned detection rules, and MTTR dropped as incident handling became faster through playbook familiarity.</li>
+  <li>Tabletop exercises transitioned from annual participation-based events to quarterly scored assessments with results escalated to the steering committee.</li>
+</ul>
+<div class="step"><div class="step-c">3</div><div class="step-t">Tool and workflow optimisation</div></div>
+<p class="b">Triage workflows updated for market-hours surge periods, playbooks refined for PCI-DSS scope incidents, and SOAR automation introduced for routine transaction monitoring alerts—automation rate improved to 38%.</p>
+<div class="step"><div class="step-c">4</div><div class="step-t">Metric tracking</div></div>
+<p class="b">After six months, the financial services SOC recorded significant improvements:</p>
+<div class="sg">
+  <div class="sc"><div class="sc-n">11h</div><div class="sc-c">−39%</div><div class="sc-l">MTTD Improvement</div></div>
+  <div class="sc"><div class="sc-n">7.5h</div><div class="sc-c">−37%</div><div class="sc-l">MTTR Improvement</div></div>
+  <div class="sc"><div class="sc-n">14%</div><div class="sc-c">−8 pts</div><div class="sc-l">False Positive Rate</div></div>
+  <div class="sc"><div class="sc-n">+29%</div><div class="sc-c">Increased</div><div class="sc-l">Analyst Throughput</div></div>
+  <div class="sc"><div class="sc-n">2.5mo</div><div class="sc-c">−6 weeks</div><div class="sc-l">Ramp-Up Time</div></div>
+  <div class="sc"><div class="sc-n">38%</div><div class="sc-c">+26 pts</div><div class="sc-l">Automation Rate</div></div>
+</div>
+<div class="co co-n"><div class="co-l">Note</div><p>MTTD and MTTR for financial services should be segmented by system criticality and regulatory scope—a 4-hour response for a general phishing alert may be acceptable, while the same timeframe for a payment processing system could trigger breach notification obligations under PCI-DSS or state banking regulations.</p></div>
+<div class="co co-i"><div class="co-l">Real Impact</div><p>A credential theft attempt targeting the institution's customer-facing banking portal was detected and contained within 3 hours, preventing potential exposure of 200,000+ account records. A year earlier, a similar attack went undetected for 5 days and required costly external incident response engagement and regulatory notification.</p></div>
+<div class="step"><div class="step-c">5</div><div class="step-t">Stakeholder communication</div></div>
+<p class="b">A monthly dashboard for the CISO showed progress aligned with FFIEC examination criteria. A quarterly board-level summary linked metric improvements to reduced regulatory exposure, avoided fraud losses, and strengthened audit posture—moving the financial services SOC from running operations to <strong>proving outcomes that survive steering committee scrutiny</strong>.</p>
+<div class="qt"><p>"Team readiness — that's what I'm looking for."</p><cite>— SVP Director of IT, Regional Bank (from industry research)</cite></div>
+</section><div class="divider"></div>
+<section id="s7"><div><span class="sn">07</span><h2 class="st">Best Practices for Dashboarding & Reporting</h2><div class="sb"></div></div>
+<p class="b">In financial services, dashboards serve a dual purpose: they drive operational improvement <strong>and</strong> they produce evidence for auditors and regulators. A dashboard that is operationally useful but cannot be exported for an FFIEC examination is only doing half its job.</p>
+<table class="dt"><thead><tr><th>Cadence</th><th>Audience</th><th>Focus</th></tr></thead><tbody>
+<tr><td>Weekly</td><td>SOC Team</td><td>Operational snapshots, alert queues, shift handover metrics</td></tr>
+<tr><td>Monthly</td><td>SOC Managers / CISO</td><td>Tactical dashboards, team efficiency, trend analysis, exercise results</td></tr>
+<tr><td>Quarterly</td><td>Board / Steering Committee</td><td>Strategic reports, risk reduction, regulatory compliance, audit readiness, ROI</td></tr>
+</tbody></table>
+<ul class="ml">
+  <li><strong>Clarity of purpose:</strong> every metric shown must answer a question—"Are we detecting payment fraud faster? Are we meeting PCI-DSS SLAs? Can we prove it to an examiner?"</li>
+  <li><strong>Layered views:</strong> "play-by-play" for analysts, "summary" for managers, "defensible narrative" for the board and steering committee.</li>
+  <li><strong>Narrative context:</strong> numbers alone don't satisfy auditors—accompany dashboards with commentary like "MTTD improved 39% following targeted payment fraud simulation training, with evidence retained in exercise logs."</li>
+  <li><strong>Audit trail:</strong> every data point should be traceable to source systems. In financial services, a metric without provenance is a metric an examiner will challenge.</li>
+  <li><strong>Action triggers:</strong> annotations when metrics hit thresholds with recommended specific actions and assigned ownership.</li>
+</ul>
+<table class="dt"><thead><tr><th>Role</th><th>Share</th><th>Primary Interest</th></tr></thead><tbody>
+<tr><td>CISO / CRO</td><td>35%</td><td>Regulatory compliance, risk posture, board-ready summaries, audit evidence</td></tr>
+<tr><td>SOC Managers</td><td>35%</td><td>Team efficiency, throughput, coverage gaps, staffing, exercise scores</td></tr>
+<tr><td>Analysts</td><td>30%</td><td>Personal performance, alert queues, skill development, certification progress</td></tr>
+</tbody></table>
+<div class="co co-n"><div class="co-l">Best Practice</div><p>Build dashboards that serve double duty. The same data that tells your SOC manager "we're getting faster" should also tell your compliance officer "we can demonstrate continuous improvement in a format examiners accept." This is not optional in regulated environments—it is an operational requirement.</p></div>
+</section><div class="divider"></div>
+<section id="s8"><div><span class="sn">08</span><h2 class="st">Common Pitfalls & How to Avoid Them</h2><div class="sb"></div></div>
+<p class="b">Even the best intentioned financial services metrics programmes can go off track:</p>
+<div class="pit"><div class="pit-t">Vanity metrics dominate</div><div class="pit-b"><strong>Problem:</strong> Dozens of numbers but few tied to risk reduction or regulatory obligations.<br><strong>Solution:</strong> Trim to a focused set tied to audit requirements, risk appetite, and business outcomes. If a metric cannot answer a question from an examiner or the board, remove it.</div></div>
+<div class="pit"><div class="pit-t">Metrics without context</div><div class="pit-b"><strong>Problem:</strong> A low FPR looks good—unless detection coverage for payment systems collapsed to achieve it.<br><strong>Solution:</strong> Always interpret metrics together. A fast MTTR means nothing if MTTD is poor—you're responding quickly to threats you found late.</div></div>
+<div class="pit"><div class="pit-t">Training hours ≠ readiness</div><div class="pit-b"><strong>Problem:</strong> Reporting training hours completed without measuring whether analysts are actually better at their jobs. Fifty hours of training that doesn't translate to faster response times or better detection is not defensible.<br><strong>Solution:</strong> Measure outcomes, not inputs. Track how training translates to metric improvement over time. Use scored exercises and simulations, not just completion certificates.</div></div>
+<div class="pit"><div class="pit-t">Dashboards no one reads</div><div class="pit-b"><strong>Problem:</strong> If metrics aren't consumed by decision-makers, they don't drive change or satisfy audit requirements.<br><strong>Solution:</strong> Tailor dashboards to each audience and build narrative around financial outcomes. Make the board version focus on risk reduction and regulatory posture, not technical details.</div></div>
+<div class="pit"><div class="pit-t">Data quality issues</div><div class="pit-b"><strong>Problem:</strong> Incomplete timestamps, inconsistent logging across regional offices, or gaps between core banking alerts and SIEM records.<br><strong>Solution:</strong> Invest in instrumentation and logging standardisation. In financial services, data quality is itself an audit item.</div></div>
+<div class="pit"><div class="pit-t">Metric overload for analysts</div><div class="pit-b"><strong>Problem:</strong> Too many individual performance metrics feel punitive, damaging morale and creating fear rather than development.<br><strong>Solution:</strong> Use metrics to support development, not punish. Frame improvements as team wins. Position metrics as career development tools, not surveillance.</div></div>
+<div class="pit"><div class="pit-t">Stagnant targets</div><div class="pit-b"><strong>Problem:</strong> Financial threats evolve with real-time payments, open banking, AI-powered fraud, and deepfake social engineering.<br><strong>Solution:</strong> Review targets after major incidents, regulatory updates, product launches, or technology changes. What was adequate last year may not survive this year's examination.</div></div>
+<div class="qt"><p>"I get people that go on like 50 hours of training… but they are as bad as before."</p><cite>— CyberSOC Manager, Global Enterprise (from industry research)</cite></div>
+</section><div class="divider"></div>
+<section id="s9"><div><span class="sn">09</span><h2 class="st">Building Your Financial Services SOC Metrics Programme</h2><div class="sb"></div></div>
+<table class="dt"><thead><tr><th>Phase</th><th>Timeline</th><th>Effort</th><th>Focus</th></tr></thead><tbody>
+<tr><td><strong>1. Foundation</strong></td><td>4 weeks</td><td>Medium</td><td>Identify metrics, audit data sources, assign ownership</td></tr>
+<tr><td><strong>2. Build</strong></td><td>6 weeks</td><td>High</td><td>Design dashboards, build reporting templates, establish audit trail</td></tr>
+<tr><td><strong>3. Improve</strong></td><td>12 weeks</td><td>Highest</td><td>Drive continuous improvement, integrate training, score exercises</td></tr>
+<tr><td><strong>4. Value Demo</strong></td><td>4 weeks</td><td>Medium</td><td>Translate to business outcomes, board reporting, audit readiness</td></tr>
+</tbody></table>
+<div class="step"><div class="step-c">1</div><div class="step-t">Establish foundation</div></div>
+<ul class="ml">
+  <li>Identify 5–8 core metrics aligned to your institution's top regulatory and risk objectives.</li>
+  <li>Audit existing data sources: SIEM, transaction monitoring, ticketing systems, core banking platforms, fraud detection engines.</li>
+  <li>Assign metric ownership: who collects, reviews, and reports to the steering committee.</li>
+  <li>Set initial baselines and realistic improvement targets informed by risk appetite.</li>
+</ul>
+<div class="step"><div class="step-c">2</div><div class="step-t">Build measurement and reporting</div></div>
+<ul class="ml">
+  <li>Design dashboards for each audience layer (analyst, SOC manager, CISO, board/steering committee).</li>
+  <li>Build monthly and quarterly templates with narrative commentary and audit trail documentation.</li>
+  <li>Integrate scenario-based training (e.g., TryHackMe financial services modules) to support metrics improvement with scored exercises.</li>
+  <li>Ensure all exercise results are documented in a format that satisfies FFIEC and DORA examination requirements.</li>
+</ul>
+<div class="step"><div class="step-c">3</div><div class="step-t">Drive continuous improvement</div></div>
+<ul class="ml">
+  <li>Review metrics monthly, identify gaps, implement improvements (training, automation, tool updates, playbook revisions).</li>
+  <li>Transition tabletop exercises from annual participation events to quarterly scored assessments with results escalated to the steering committee.</li>
+  <li>Report progress: highlight wins (prevented fraud, faster containment), challenges, and next steps.</li>
+  <li>Adjust metric set and targets based on threat evolution, regulatory changes, and product launches.</li>
+</ul>
+<div class="step"><div class="step-c">4</div><div class="step-t">Demonstrate value</div></div>
+<ul class="ml">
+  <li>Link improvements to financial business language (reduced regulatory exposure, avoided fraud losses, lower insurance premiums, fewer audit findings).</li>
+  <li>Present at board level: show how trend-lines support institutional risk appetite and regulatory posture.</li>
+  <li>Justify investment: "We reduced detection time by 39%—this translates to X fewer potential breach notification events per year."</li>
+  <li>Build the case for continuous investment, not one-off projects. Regulators expect ongoing programmes, not point-in-time fixes.</li>
+</ul>
+<div class="rg">
+  <div class="rc"><div class="rc-n">39%</div><div class="rc-l">Reduction in<br>Mean Time to Detect</div></div>
+  <div class="rc"><div class="rc-n">57%</div><div class="rc-l">Reduction in<br>Mean Dwell Time</div></div>
+  <div class="rc"><div class="rc-n">29%</div><div class="rc-l">Improvement in<br>Incident Response</div></div>
+</div>
+<p class="disc">These metrics are drawn from financial services organisations that implemented structured, scenario-based training programmes alongside SOC metrics initiatives.</p>
+</section><div class="divider"></div>
+<section id="s10"><div><span class="sn">10</span><h2 class="st">Metric Definitions & Formulas</h2><div class="sb"></div></div>
+<div class="fg">
+  <div class="fc"><div class="fc-n">Mean Time to Detect (MTTD)</div><div class="fc-d">Avg time from initial threat activity until SOC detection</div></div>
+  <div class="fc"><div class="fc-n">Mean Time to Respond (MTTR)</div><div class="fc-d">Avg time from detection through containment/remediation</div></div>
+  <div class="fc"><div class="fc-n">False Positive Rate (FPR)</div><div class="fc-d">(False Positives ÷ Total Alerts) × 100</div></div>
+  <div class="fc"><div class="fc-n">False Negative Rate (FNR)</div><div class="fc-d">(Missed Threats ÷ Total Threats) × 100</div></div>
+  <div class="fc"><div class="fc-n">Detection Coverage (%)</div><div class="fc-d">(Vectors covered ÷ Total relevant vectors) × 100</div></div>
+  <div class="fc"><div class="fc-n">Analyst Throughput</div><div class="fc-d">(Incidents resolved ÷ FTE analysts) per period</div></div>
+  <div class="fc"><div class="fc-n">Automation Rate</div><div class="fc-d">(Auto-handled alerts ÷ Total alerts) × 100</div></div>
+  <div class="fc"><div class="fc-n">Ramp-Up Time</div><div class="fc-d">Avg time from hire to full-operational status</div></div>
+  <div class="fc"><div class="fc-n">Escalation Rate</div><div class="fc-d">(Escalated incidents ÷ Total incidents) × 100</div></div>
+  <div class="fc"><div class="fc-n">Cost per Incident</div><div class="fc-d">Total SOC cost ÷ Number of incidents managed</div></div>
+  <div class="fc"><div class="fc-n">Audit Readiness Score</div><div class="fc-d">Composite: documentation + exercise frequency + evidence retention + trend</div></div>
+  <div class="fc"><div class="fc-n">Dwell Time</div><div class="fc-d">Total time from initial compromise to containment</div></div>
+</div>
+</section><div class="divider"></div>
+<section id="s11"><div><span class="sn">11</span><h2 class="st">How TryHackMe Supports Your Metrics Programme</h2><div class="sb"></div></div>
+<p class="b">Throughout this guide, we've highlighted how scenario-based training and real-world adversary emulation contribute to metric improvements for financial services SOCs. TryHackMe helps organisations:</p>
+<ul class="ml">
+  <li><strong>Reduce MTTD and MTTR</strong> through hands-on incident response training that builds analyst muscle memory for financial-specific threats including payment fraud, credential theft targeting customer portals, ransomware against trading systems, and lateral movement through interconnected banking infrastructure.</li>
+  <li><strong>Improve detection coverage</strong> by training teams on MITRE ATT&CK techniques relevant to financial systems and threat hunting methodologies tailored to FS-ISAC and SWIFT intelligence.</li>
+  <li><strong>Decrease ramp-up time</strong> with structured learning paths from fundamentals to advanced skills in payment security, fraud investigation, core banking defence, and regulatory compliance scenarios.</li>
+  <li><strong>Produce audit-ready evidence</strong> through scored exercises, detailed completion tracking, and management dashboards that document continuous improvement in a format examiners and steering committees accept.</li>
+  <li><strong>Lower escalation rates</strong> by building confidence across all analyst levels through progressive scenario difficulty mirroring real financial services attack patterns.</li>
+  <li><strong>Fill the gap between exercises</strong> with continuous, hands-on training that keeps analysts sharp between quarterly tabletops—addressing the most common readiness gap in financial services SOCs.</li>
+</ul>
+<div class="qt"><p>"To fill in the spots in between — that's what bothers me."</p><cite>— SVP Director of IT, Regional Bank, on the gap between quarterly exercises (from industry research)</cite></div>
+<div class="cta">
+  <h3>Ready to Build Your Metrics-Driven Financial Services SOC?</h3>
+  <p>Start measuring, improving, and communicating your SOC performance with confidence. Use this guide as your roadmap to transform security operations from reactive to defensible.</p>
+  <a href="https://tryhackme.com/business">Start your Business Trial</a>
+</div>
+</section>
+</main>
+<footer style="text-align:center;padding:40px 24px 60px;color:var(--t3);font-size:13px">
+  <div style="color:var(--g);font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;margin-bottom:8px">TRYHACKME</div>
+  A Guide to SOC Metrics — Financial Services
+</footer>
+</body>
+</html>
